@@ -39,7 +39,7 @@ namespace ArtistsMVC.Controllers
         // GET: Albums/Create
         public ActionResult Create()
         {
-            ViewBag.ArtistId = new SelectList(db.Artists, "ID", "FirstName");
+            ViewBag.ArtistId = new SelectList(db.Artists, "ID", "FullName");
             return View();
         }
 
@@ -73,7 +73,7 @@ namespace ArtistsMVC.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ArtistId = new SelectList(db.Artists, "ID", "FirstName", album.ArtistId);
+            ViewBag.ArtistId = new SelectList(db.Artists, "ID", "FullName", album.ArtistId);
             return View(album);
         }
 
