@@ -21,6 +21,7 @@ namespace ArtistsMVC.Models
 
 
         [NotMapped]
+        [Display(Name = "Artist")]
         public string FullName
         {
             get
