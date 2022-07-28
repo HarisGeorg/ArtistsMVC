@@ -25,6 +25,12 @@ namespace ArtistsMVC.Controllers
                 .Include(s => s.Album.Artist)
                 .ToList();
 
+            //var songs = _context
+            //    .Songs
+            //    .Where(s => s.Album.Artist.ID == 1)
+            //    .Include(s => s.Album.Artist)
+            //    .ToList();
+
             return View(songs);
         }
 
@@ -33,6 +39,7 @@ namespace ArtistsMVC.Controllers
             if (id == null)
             {
                 return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+                //return RedirectToAction("Index");
             }
 
             var song = _context

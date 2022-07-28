@@ -92,7 +92,7 @@ namespace ArtistsMVC.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ArtistId = new SelectList(db.Artists, "ID", "FirstName", album.ArtistId);
+            ViewBag.ArtistId = new SelectList(db.Artists, "ID", "FullName", album.ArtistId);
             return View(album);
         }
 
