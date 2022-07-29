@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
+using ArtistsMVC.ViewModels;
 
 namespace ArtistsMVC.Controllers
 {
@@ -54,6 +55,23 @@ namespace ArtistsMVC.Controllers
 
             return View(song);
         }
+
+        public ActionResult New()
+        {
+            // Get albums from the database
+            var albums = _context.Albums.ToList();
+
+            // Init and fill the viewmodel
+            var viewmodel = new SongFormViewModel()
+            {
+                Song = new Song(),
+                Albums = albums
+            };
+
+            // Return the appropriate view with the viewmodel
+            return View("SongForm", viewmodel);
+        }
+
 
         protected override void Dispose(bool disposing)
         {
