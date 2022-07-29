@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using ArtistsMVC.Models
+using ArtistsMVC.Models;
 
 namespace ArtistsMVC.ViewModels
 {

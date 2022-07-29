@@ -16,6 +16,7 @@ namespace ArtistsMVC.Models
 
         public string Youtube { get; set; }
 
+        [Display(Name = "Album")]
         public int AlbumId { get; set; }
         public Album Album { get; set; }
     }
