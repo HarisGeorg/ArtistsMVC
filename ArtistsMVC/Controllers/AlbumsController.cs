@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ArtistsMVC.Models;
+using ArtistsMVC.Repositories;
 
 namespace ArtistsMVC.Controllers
 {
@@ -14,10 +15,17 @@ namespace ArtistsMVC.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        private readonly AlbumRepository _albumRepository;
+
+        public AlbumsController()
+        {
+            _albumRepository = new AlbumRepository();
+        }
+
         // GET: Albums
         public ActionResult Index()
         {
-            var albums = db.Albums.Include(a => a.Artist);
+            var albums = _albumRepository.GetAllWithArtists();
             return View(albums.ToList());
         }
 
