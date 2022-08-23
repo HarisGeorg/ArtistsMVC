@@ -136,6 +136,40 @@ namespace ArtistsMVC.Controllers
             return View("SongForm", viewModel);
         }
 
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+            }
+
+            var song = _context.Songs
+                .Include(s => s.Album)
+                .SingleOrDefault(s => s.ID == id);
+
+            if (song == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(song);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            var song = _context.Songs
+                .SingleOrDefault(s => s.ID == id);
+
+            if (song == null)
+            {
+                return HttpNotFound();  //oste an to sviso apo alli kartela na min petaksi exception epeidi den tha to vrei
+            }
+            _context.Songs.Remove(song);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
 
         protected override void Dispose(bool disposing)
         {
