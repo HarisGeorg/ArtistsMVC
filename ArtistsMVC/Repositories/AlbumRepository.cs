@@ -7,7 +7,7 @@ using System.Data.Entity;
 
 namespace ArtistsMVC.Repositories
 {
-    public class AlbumRepository
+    public class AlbumRepository : IDisposable
     {
         private readonly ApplicationDbContext _context;
 
@@ -59,6 +59,18 @@ namespace ArtistsMVC.Repositories
         {
             _context.Entry(album).State = EntityState.Modified;         //einai sintomografia ton apopano entolon
             _context.SaveChanges();
+        }
+
+        public void Delete(int? id)
+        {
+            Album album = GetById(id);
+            _context.Albums.Remove(album);
+            _context.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }

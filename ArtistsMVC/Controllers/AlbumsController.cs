@@ -12,9 +12,7 @@ using ArtistsMVC.Repositories;
 namespace ArtistsMVC.Controllers
 {
     public class AlbumsController : Controller
-    {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
+    {        
         private readonly AlbumRepository _albumRepository;
         private readonly ArtistsRepository _artistsRepository;
 
@@ -134,9 +132,8 @@ namespace ArtistsMVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albums
-                .Include(a => a.Artist)
-                .SingleOrDefault(a => a.ID == id);
+
+            Album album = _albumRepository.GetByIdWithArtist(id);
 
             if (album == null)
             {
@@ -150,9 +147,7 @@ namespace ArtistsMVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Album album = db.Albums.Find(id);
-            db.Albums.Remove(album);
-            db.SaveChanges();
+            _albumRepository.Delete(id);
             return RedirectToAction("Index");
         }
 
@@ -160,7 +155,8 @@ namespace ArtistsMVC.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _artistsRepository.Dispose();
+                _albumRepository.Dispose();
             }
             base.Dispose(disposing);
         }

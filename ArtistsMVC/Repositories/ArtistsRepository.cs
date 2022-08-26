@@ -6,7 +6,7 @@ using System.Web;
 
 namespace ArtistsMVC.Repositories
 {
-    public class ArtistsRepository
+    public class ArtistsRepository : IDisposable
     {
         private readonly ApplicationDbContext _context;
 
@@ -18,6 +18,11 @@ namespace ArtistsMVC.Repositories
         public IEnumerable<Artist> GetAll()
         {
             return _context.Artists;
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }
