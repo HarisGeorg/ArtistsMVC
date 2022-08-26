@@ -32,18 +32,30 @@ namespace ArtistsMVC.Controllers
         // GET: Albums/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            //if (id == null)
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //}
+
+            
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                Album album = _albumRepository.GetByIdWithArtist(id);
+
+                if (album == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(album);
             }
-            Album album = db.Albums
-                .Include(a => a.Artist)
-                .SingleOrDefault(a => a.ID == id);
-            if (album == null)
+            catch (Exception ex)
             {
-                return HttpNotFound();
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);       
             }
-            return View(album);
+
+            //Album album = _albumRepository.GetByIdWithArtist(id);
+
+            
         }
 
         // GET: Albums/Create
