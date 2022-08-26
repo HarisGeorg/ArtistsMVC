@@ -44,5 +44,11 @@ namespace ArtistsMVC.Repositories
                 .SingleOrDefault(a => a.ID == id);
         }
 
+        public void Create(Album album)
+        {
+            _context.Albums.Add(album);
+            _context.SaveChanges();
+        }
+
     }
 }
