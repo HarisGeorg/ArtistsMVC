@@ -93,12 +93,15 @@ namespace ArtistsMVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albums.Find(id);
+
+            Album album = _albumRepository.GetById(id);
+
             if (album == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ArtistId = new SelectList(db.Artists, "ID", "FullName", album.ArtistId);
+
+            ViewBag.ArtistId = new SelectList(_artistsRepository.GetAll(), "ID", "FullName", album.ArtistId);
             return View(album);
         }
 
@@ -111,11 +114,16 @@ namespace ArtistsMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(album).State = EntityState.Modified;
-                db.SaveChanges();
+                //var albumInDb = db.Albums.SingleOrDefault(a => a.ID == album.ID);
+                //albumInDb.Title = album.Title;
+                //albumInDb.Description = album.Description;
+                //albumInDb.ArtistId = album.ArtistId;
+                //db.Entry(album).State = EntityState.Modified;         //einai sintomografia ton apopano entolon
+
+                _albumRepository.Update(album);
                 return RedirectToAction("Index");
             }
-            ViewBag.ArtistId = new SelectList(db.Artists, "ID", "FullName", album.ArtistId);
+            ViewBag.ArtistId = new SelectList(_artistsRepository.GetAll(), "ID", "FullName", album.ArtistId);
             return View(album);
         }
 
