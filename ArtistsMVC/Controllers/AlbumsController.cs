@@ -48,7 +48,7 @@ namespace ArtistsMVC.Controllers
                 }
                 return View(album);
             }
-            catch (Exception ex)
+            catch (Exception)  //ex
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);       
             }
