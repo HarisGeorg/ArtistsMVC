@@ -59,7 +59,7 @@ namespace ArtistsMVC.Controllers.Api
         }
 
         [HttpPost]
-        public Album CreatedAlbum(AlbumDto albumDto)
+        public AlbumDto CreatedAlbum(AlbumDto albumDto)
         {
             if (!ModelState.IsValid)     //paei sto Model/Album kai vlepei an isxioun oi periorismoi ton Annotations
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
@@ -71,7 +71,8 @@ namespace ArtistsMVC.Controllers.Api
                 ArtistId = albumDto.ArtistId
             };
             _albumRepository.Create(album);
-            return album;
+            albumDto.ID = album.ID;
+            return albumDto;
         }
 
         [HttpPut]
