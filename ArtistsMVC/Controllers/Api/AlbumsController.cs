@@ -1,6 +1,7 @@
 ﻿using ArtistsMVC.Dtos;
 using ArtistsMVC.Models;
 using ArtistsMVC.Repositories;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,23 +22,26 @@ namespace ArtistsMVC.Controllers.Api
 
         public IEnumerable<AlbumDto> GetAlbums()
         {
-            var albums = _albumRepository.GetAll();
-            var albumDtos = new List<AlbumDto>();
+            //var albums = _albumRepository.GetAll();
+            //var albumDtos = new List<AlbumDto>();
 
-            foreach (var album in albums)
-            {
-                var albumDto = new AlbumDto
-                {
-                    ID = album.ID,
-                    Title = album.Title,
-                    Description = album.Description,
-                    ArtistId = album.ArtistId
-                };
+            //foreach (var album in albums)
+            //{
+            //    var albumDto = new AlbumDto
+            //    {
+            //        ID = album.ID,
+            //        Title = album.Title,
+            //        Description = album.Description,
+            //        ArtistId = album.ArtistId
+            //    };
 
-                albumDtos.Add(albumDto);
-            }
+            //    albumDtos.Add(albumDto);
+            //}
 
-            return albumDtos;
+            //return albumDtos;
+
+            return _albumRepository.GetAll()        //isodinamo me ola ta apo pano
+                .Select(Mapper.Map<Album, AlbumDto>);
         }
 
         public AlbumDto GetAlbum(int id)
@@ -47,15 +51,17 @@ namespace ArtistsMVC.Controllers.Api
             if (album == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var albumDto = new AlbumDto
-            {
-                ID = album.ID,
-                Title = album.Title,
-                Description = album.Description,
-                ArtistId = album.ArtistId
-            };
+            //var albumDto = new AlbumDto
+            //{
+            //    ID = album.ID,
+            //    Title = album.Title,
+            //    Description = album.Description,
+            //    ArtistId = album.ArtistId
+            //};
 
-            return albumDto;
+            //return albumDto;
+
+            return Mapper.Map<Album, AlbumDto>(album);
         }
 
         [HttpPost]
@@ -64,12 +70,15 @@ namespace ArtistsMVC.Controllers.Api
             if (!ModelState.IsValid)     //paei sto Model/Album kai vlepei an isxioun oi periorismoi ton Annotations
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            var album = new Album()
-            {
-                Title = albumDto.Title,
-                Description = albumDto.Description,
-                ArtistId = albumDto.ArtistId
-            };
+            //var album = new Album()
+            //{
+            //    Title = albumDto.Title,
+            //    Description = albumDto.Description,
+            //    ArtistId = albumDto.ArtistId
+            //};
+            
+            var album = Mapper.Map<AlbumDto, Album>(albumDto);
+
             _albumRepository.Create(album);
             albumDto.ID = album.ID;
             return albumDto;
@@ -87,9 +96,11 @@ namespace ArtistsMVC.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             //_albumRepository.Update(album);   //Throws Error
-            albumInDb.Title = albumDto.Title;
-            albumInDb.Description = albumDto.Description;
-            albumInDb.ArtistId = albumDto.ArtistId;
+            //albumInDb.Title = albumDto.Title;
+            //albumInDb.Description = albumDto.Description;
+            //albumInDb.ArtistId = albumDto.ArtistId;
+
+            Mapper.Map(albumDto, albumInDb);    //Edo tha prepei na perasoume to id apo to body
             _albumRepository.Save();
         }
 
