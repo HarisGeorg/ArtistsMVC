@@ -20,7 +20,7 @@ namespace ArtistsMVC.Controllers.Api
             _albumRepository = new AlbumRepository();
         }
 
-        public IEnumerable<AlbumDto> GetAlbums()
+        public IHttpActionResult GetAlbums()
         {
             //var albums = _albumRepository.GetAll();
             //var albumDtos = new List<AlbumDto>();
@@ -40,16 +40,17 @@ namespace ArtistsMVC.Controllers.Api
 
             //return albumDtos;
 
-            return _albumRepository.GetAll()        //isodinamo me ola ta apo pano
-                .Select(Mapper.Map<Album, AlbumDto>);
+            return Ok(_albumRepository.GetAll()        //isodinamo me ola ta apo pano
+                .Select(Mapper.Map<Album, AlbumDto>));
         }
 
-        public AlbumDto GetAlbum(int id)
+        public IHttpActionResult GetAlbum(int id)
         {
             var album = _albumRepository.GetById(id);
 
             if (album == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                //throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
 
             //var albumDto = new AlbumDto
             //{
@@ -59,16 +60,16 @@ namespace ArtistsMVC.Controllers.Api
             //    ArtistId = album.ArtistId
             //};
 
-            //return albumDto;
+                //return albumDto;
 
-            return Mapper.Map<Album, AlbumDto>(album);
+            return Ok(Mapper.Map<Album, AlbumDto>(album));
         }
 
         [HttpPost]
-        public AlbumDto CreatedAlbum(AlbumDto albumDto)
+        public IHttpActionResult CreatedAlbum(AlbumDto albumDto)
         {
             if (!ModelState.IsValid)     //paei sto Model/Album kai vlepei an isxioun oi periorismoi ton Annotations
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return BadRequest();
 
             //var album = new Album()
             //{
@@ -81,19 +82,21 @@ namespace ArtistsMVC.Controllers.Api
 
             _albumRepository.Create(album);
             albumDto.ID = album.ID;
-            return albumDto;
-        }
+            //return albumDto;
+
+            return Created(new Uri(Request.RequestUri + "/" + album.ID), albumDto); //Uri: pairnei to URL tis current action. Mesa tou vazo ena string pou to kano concatenate me to album ID
+        }                                                                           //afto tha girisei piso to last inserted object -> album
 
         [HttpPut]
-        public void Update(int id, AlbumDto albumDto)
+        public IHttpActionResult Update(int id, AlbumDto albumDto)
         {
             if (!ModelState.IsValid)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return BadRequest();
 
             var albumInDb = _albumRepository.GetById(id);
 
             if (albumInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
 
             //_albumRepository.Update(album);   //Throws Error
             //albumInDb.Title = albumDto.Title;
@@ -102,17 +105,21 @@ namespace ArtistsMVC.Controllers.Api
 
             Mapper.Map(albumDto, albumInDb);    //Edo tha prepei na perasoume to id apo to body
             _albumRepository.Save();
+
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         [HttpDelete]
-        public void Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
             var albumInDb = _albumRepository.GetById(id);
 
             if (albumInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
 
             _albumRepository.Delete(id);
+
+            return Ok(albumInDb);
         }
 
         protected override void Dispose(bool disposing) // override alla kratao kai tin arxiki ilopiisi
